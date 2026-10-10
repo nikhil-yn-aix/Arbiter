@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\small
+\caption{Sensitivity of nDCG@10 to prompt or rubric wording. Rank 1 is the most robust. Models without a prompt have a single variant, so their deviation is zero by construction.}
+\label{tab:prompts}
+\begin{tabular}{llrrrr}
+\toprule
+Model & Variation & Variants & nDCG mean & nDCG std & Rank \\
+\midrule
+BGE-base & None & 1 & 0.550 & 0.0000 & 1 \\
+BGE-v2-m3 & None & 1 & 0.569 & 0.0000 & 2 \\
+MiniLM-L6 & None & 1 & 0.559 & 0.0000 & 3 \\
+Jina-v2 & Instruction & 2 & 0.585 & 0.0062 & 4 \\
+Qwen3-0.6B & Instruction & 3 & 0.598 & 0.0063 & 5 \\
+Laya-EN & Rubric & 3 & 0.450 & 0.0088 & 6 \\
+Laya-TD & Rubric & 3 & 0.397 & 0.0097 & 7 \\
+Laya-Multi & Rubric & 3 & 0.371 & 0.0228 & 8 \\
+\bottomrule
+\end{tabular}
+\end{table}

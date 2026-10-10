@@ -1,0 +1,266 @@
+{
+  "laya-en": {
+    "typos": {
+      "kendall_tau_perturb": 0.7085511831836019,
+      "kendall_tau_std": 0.12275309477253836,
+      "top10_overlap": 0.8503333333333334,
+      "rank_variance": 4.390066666666667,
+      "ndcg_clean": 0.6147674813997638,
+      "ndcg_perturbed": 0.5756845696952116
+    },
+    "synonyms": {
+      "kendall_tau_perturb": 0.711872557933903,
+      "kendall_tau_std": 0.14167597166867263,
+      "top10_overlap": 0.854666666666667,
+      "rank_variance": 4.604466666666667,
+      "ndcg_clean": 0.6147674813997638,
+      "ndcg_perturbed": 0.5458012883038398
+    },
+    "paraphrase": {
+      "kendall_tau_perturb": 0.6460190966519741,
+      "kendall_tau_std": 0.14464838721713943,
+      "top10_overlap": 0.8186666666666668,
+      "rank_variance": 5.4294,
+      "ndcg_clean": 0.6147674813997638,
+      "ndcg_perturbed": 0.5825854650743004
+    },
+    "kendall_tau_perturb": 0.6888142792564931,
+    "kendall_tau_std": 0.140019303901718,
+    "top10_overlap": 0.8412222222222224,
+    "rank_variance": 4.807977777777778,
+    "ndcg_clean": 0.6147674813997638,
+    "ndcg_perturbed": 0.568023774357784,
+    "threshold": 1
+  },
+  "laya-multi": {
+    "typos": {
+      "kendall_tau_perturb": 0.6788201813777133,
+      "kendall_tau_std": 0.12002715807477365,
+      "top10_overlap": 0.8320000000000001,
+      "rank_variance": 5.629133333333332,
+      "ndcg_clean": 0.4484113153783652,
+      "ndcg_perturbed": 0.44681738675466837
+    },
+    "synonyms": {
+      "kendall_tau_perturb": 0.6559952028143312,
+      "kendall_tau_std": 0.14581173891545102,
+      "top10_overlap": 0.8273333333333335,
+      "rank_variance": 5.709666666666666,
+      "ndcg_clean": 0.4484113153783652,
+      "ndcg_perturbed": 0.40820661664545554
+    },
+    "paraphrase": {
+      "kendall_tau_perturb": 0.5564741014926982,
+      "kendall_tau_std": 0.13830814694025767,
+      "top10_overlap": 0.765,
+      "rank_variance": 7.290133333333333,
+      "ndcg_clean": 0.4484113153783652,
+      "ndcg_perturbed": 0.4365158709239222
+    },
+    "kendall_tau_perturb": 0.6304298285615809,
+    "kendall_tau_std": 0.1452140828383417,
+    "top10_overlap": 0.8081111111111112,
+    "rank_variance": 6.209644444444445,
+    "ndcg_clean": 0.4484113153783652,
+    "ndcg_perturbed": 0.43051329144134876,
+    "threshold": 1
+  },
+  "laya-td": {
+    "typos": {
+      "kendall_tau_perturb": 0.7678549909292801,
+      "kendall_tau_std": 0.11802416341002205,
+      "top10_overlap": 0.8753333333333334,
+      "rank_variance": 3.4234666666666658,
+      "ndcg_clean": 0.5072591688529505,
+      "ndcg_perturbed": 0.4723542954856763
+    },
+    "synonyms": {
+      "kendall_tau_perturb": 0.7589055830599584,
+      "kendall_tau_std": 0.12025940626137871,
+      "top10_overlap": 0.8753333333333334,
+      "rank_variance": 3.6637333333333335,
+      "ndcg_clean": 0.5072591688529505,
+      "ndcg_perturbed": 0.46205272872731806
+    },
+    "paraphrase": {
+      "kendall_tau_perturb": 0.6896652066988344,
+      "kendall_tau_std": 0.12761842581269528,
+      "top10_overlap": 0.8366666666666669,
+      "rank_variance": 4.430533333333332,
+      "ndcg_clean": 0.5072591688529505,
+      "ndcg_perturbed": 0.4925454323205069
+    },
+    "kendall_tau_perturb": 0.7388085935626909,
+    "kendall_tau_std": 0.12693980884546172,
+    "top10_overlap": 0.8624444444444446,
+    "rank_variance": 3.839244444444444,
+    "ndcg_clean": 0.5072591688529505,
+    "ndcg_perturbed": 0.47565081884450044,
+    "threshold": 1
+  },
+  "bge-v2-m3": {
+    "typos": {
+      "kendall_tau_perturb": 0.8539739644509787,
+      "kendall_tau_std": 0.08910480614393716,
+      "top10_overlap": 0.9083333333333333,
+      "rank_variance": 2.0142,
+      "ndcg_clean": 0.7602688040027875,
+      "ndcg_perturbed": 0.742046136333284
+    },
+    "synonyms": {
+      "kendall_tau_perturb": 0.7940444540188479,
+      "kendall_tau_std": 0.14182063877882511,
+      "top10_overlap": 0.8773333333333335,
+      "rank_variance": 3.3500000000000005,
+      "ndcg_clean": 0.7602688040027875,
+      "ndcg_perturbed": 0.7316668679702529
+    },
+    "paraphrase": {
+      "kendall_tau_perturb": 0.7034937756654231,
+      "kendall_tau_std": 0.16973557503027423,
+      "top10_overlap": 0.8333333333333334,
+      "rank_variance": 4.336666666666667,
+      "ndcg_clean": 0.7602688040027875,
+      "ndcg_perturbed": 0.7257262584901921
+    },
+    "kendall_tau_perturb": 0.7838373980450832,
+    "kendall_tau_std": 0.15093193287967707,
+    "top10_overlap": 0.873,
+    "rank_variance": 3.2336222222222215,
+    "ndcg_clean": 0.7602688040027875,
+    "ndcg_perturbed": 0.7331464209312429,
+    "threshold": 1
+  },
+  "bge-base": {
+    "typos": {
+      "kendall_tau_perturb": 0.8149799112161815,
+      "kendall_tau_std": 0.10266646004155582,
+      "top10_overlap": 0.8986666666666667,
+      "rank_variance": 2.918,
+      "ndcg_clean": 0.763444116831168,
+      "ndcg_perturbed": 0.746830939343911
+    },
+    "synonyms": {
+      "kendall_tau_perturb": 0.7414473905524548,
+      "kendall_tau_std": 0.16697997547615145,
+      "top10_overlap": 0.8586666666666667,
+      "rank_variance": 4.555733333333333,
+      "ndcg_clean": 0.763444116831168,
+      "ndcg_perturbed": 0.7129831504131499
+    },
+    "paraphrase": {
+      "kendall_tau_perturb": 0.6282864460344867,
+      "kendall_tau_std": 0.19281499491473283,
+      "top10_overlap": 0.8066666666666666,
+      "rank_variance": 5.587866666666666,
+      "ndcg_clean": 0.763444116831168,
+      "ndcg_perturbed": 0.7229249269993968
+    },
+    "kendall_tau_perturb": 0.7282379159343744,
+    "kendall_tau_std": 0.1763418052077195,
+    "top10_overlap": 0.8546666666666668,
+    "rank_variance": 4.353866666666666,
+    "ndcg_clean": 0.763444116831168,
+    "ndcg_perturbed": 0.7275796722521525,
+    "threshold": 1
+  },
+  "qwen3-06b": {
+    "typos": {
+      "kendall_tau_perturb": 0.8593763350228926,
+      "kendall_tau_std": 0.09599530578691153,
+      "top10_overlap": 0.9143333333333333,
+      "rank_variance": 2.0924,
+      "ndcg_clean": 0.8269409123297379,
+      "ndcg_perturbed": 0.8191451286789838
+    },
+    "synonyms": {
+      "kendall_tau_perturb": 0.8092108940998767,
+      "kendall_tau_std": 0.13659188930185667,
+      "top10_overlap": 0.8893333333333334,
+      "rank_variance": 2.798666666666666,
+      "ndcg_clean": 0.8269409123297379,
+      "ndcg_perturbed": 0.8068780476883132
+    },
+    "paraphrase": {
+      "kendall_tau_perturb": 0.7529832095371187,
+      "kendall_tau_std": 0.1408496642474062,
+      "top10_overlap": 0.8620000000000001,
+      "rank_variance": 2.9663333333333335,
+      "ndcg_clean": 0.8269409123297379,
+      "ndcg_perturbed": 0.8233661310701329
+    },
+    "kendall_tau_perturb": 0.8071901462199627,
+    "kendall_tau_std": 0.13338783625589387,
+    "top10_overlap": 0.8885555555555558,
+    "rank_variance": 2.619133333333333,
+    "ndcg_clean": 0.8269409123297379,
+    "ndcg_perturbed": 0.8164631024791433,
+    "threshold": 1
+  },
+  "jina-v2": {
+    "typos": {
+      "kendall_tau_perturb": 0.8606092737298146,
+      "kendall_tau_std": 0.0978852338744265,
+      "top10_overlap": 0.927,
+      "rank_variance": 2.1934666666666662,
+      "ndcg_clean": 0.7942993375842061,
+      "ndcg_perturbed": 0.7886973971360716
+    },
+    "synonyms": {
+      "kendall_tau_perturb": 0.7942405577854701,
+      "kendall_tau_std": 0.15008418612516428,
+      "top10_overlap": 0.8866666666666667,
+      "rank_variance": 3.4028,
+      "ndcg_clean": 0.7942993375842061,
+      "ndcg_perturbed": 0.7790265174971495
+    },
+    "paraphrase": {
+      "kendall_tau_perturb": 0.7070874342769463,
+      "kendall_tau_std": 0.1662699828801553,
+      "top10_overlap": 0.8513333333333334,
+      "rank_variance": 3.7783333333333333,
+      "ndcg_clean": 0.7942993375842061,
+      "ndcg_perturbed": 0.7785220996176353
+    },
+    "kendall_tau_perturb": 0.7873124219307437,
+    "kendall_tau_std": 0.15449807478476843,
+    "top10_overlap": 0.8883333333333334,
+    "rank_variance": 3.1248666666666667,
+    "ndcg_clean": 0.794299337584206,
+    "ndcg_perturbed": 0.7820820047502854,
+    "threshold": 1
+  },
+  "minilm": {
+    "typos": {
+      "kendall_tau_perturb": 0.7723268307696333,
+      "kendall_tau_std": 0.13000928255342714,
+      "top10_overlap": 0.8773333333333335,
+      "rank_variance": 4.4412666666666665,
+      "ndcg_clean": 0.7291720034632134,
+      "ndcg_perturbed": 0.714690726019165
+    },
+    "synonyms": {
+      "kendall_tau_perturb": 0.7510868433016674,
+      "kendall_tau_std": 0.1562264100154848,
+      "top10_overlap": 0.8629999999999999,
+      "rank_variance": 4.449000000000001,
+      "ndcg_clean": 0.7291720034632134,
+      "ndcg_perturbed": 0.7028318607971971
+    },
+    "paraphrase": {
+      "kendall_tau_perturb": 0.595773269645288,
+      "kendall_tau_std": 0.20868256745490482,
+      "top10_overlap": 0.7866666666666666,
+      "rank_variance": 5.829999999999999,
+      "ndcg_clean": 0.7291720034632134,
+      "ndcg_perturbed": 0.7177139866973209
+    },
+    "kendall_tau_perturb": 0.7063956479055297,
+    "kendall_tau_std": 0.1856870602992229,
+    "top10_overlap": 0.8423333333333335,
+    "rank_variance": 4.906755555555556,
+    "ndcg_clean": 0.7291720034632135,
+    "ndcg_perturbed": 0.711745524504561,
+    "threshold": 1
+  }
+}

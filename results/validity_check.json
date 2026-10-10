@@ -1,0 +1,79 @@
+{
+  "random_order": {
+    "scifact": 0.08601288955572409,
+    "nfcorpus": 0.1227777856822472,
+    "trec-dl-2019": 0.34184764653803096,
+    "trec-dl-2020": 0.2834006968646584,
+    "mean": 0.20850975466016516
+  },
+  "precision": {
+    "laya-en": {
+      "default_ndcg": 0.6041933461717884,
+      "full_ndcg": 0.599519156371424,
+      "mean_abs_score_difference": 0.0035135666666666677,
+      "queries": 100
+    },
+    "laya-multi": {
+      "default_ndcg": 0.43782139469418196,
+      "full_ndcg": 0.4434535753432065,
+      "mean_abs_score_difference": 0.0022212000000000004,
+      "queries": 100
+    },
+    "laya-td": {
+      "default_ndcg": 0.5089529746762453,
+      "full_ndcg": 0.5124201992107342,
+      "mean_abs_score_difference": 0.0015882666666666664,
+      "queries": 100
+    }
+  },
+  "recalibration": {
+    "laya-en": {
+      "ece_before": 0.42021034444444444,
+      "ece_after": 0.005443649567391352,
+      "brier_before": 0.26010787054944445,
+      "brier_after": 0.05665089997584383
+    },
+    "laya-multi": {
+      "ece_before": 0.4064734027777778,
+      "ece_after": 0.002857122032160427,
+      "brier_before": 0.2665541728613889,
+      "brier_after": 0.05887065438398693
+    },
+    "laya-td": {
+      "ece_before": 0.6072140194444444,
+      "ece_after": 0.004898768632572211,
+      "brier_before": 0.4335880177011111,
+      "brier_after": 0.05848215719285595
+    },
+    "bge-v2-m3": {
+      "ece_before": 0.051042391367101016,
+      "ece_after": 0.0028997830170856935,
+      "brier_before": 0.05904571796022832,
+      "brier_after": 0.044914457664795134
+    },
+    "bge-base": {
+      "ece_before": 0.05788383418242962,
+      "ece_after": 0.004213711809932619,
+      "brier_before": 0.06521690877707469,
+      "brier_after": 0.04643502601083859
+    },
+    "qwen3-06b": {
+      "ece_before": 0.10312907402850162,
+      "ece_after": 0.0072340531767902125,
+      "brier_before": 0.10237500950611768,
+      "brier_after": 0.04711287846544953
+    },
+    "jina-v2": {
+      "ece_before": 0.06331880396935675,
+      "ece_after": 0.0031314698478533036,
+      "brier_before": 0.05299424538329421,
+      "brier_after": 0.04703449423191852
+    },
+    "minilm": {
+      "ece_before": 0.091365354984146,
+      "ece_after": 0.004826074324929814,
+      "brier_before": 0.08994759270129343,
+      "brier_after": 0.04914517534479714
+    }
+  }
+}

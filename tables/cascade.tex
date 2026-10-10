@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\small
+\caption{Best cascade per pair with at least 50\% of cross-encoder calls saved. Speedup is relative to the cross-encoder reranking all 50 candidates.}
+\label{tab:cascade}
+\begin{tabular}{llrrrrr}
+\toprule
+Decision & Cross-encoder & K & nDCG@10 & CE saved & Speedup & vs. CE alone \\
+\midrule
+Laya-EN & BGE-v2-m3 & 20 & 0.621 & 60\% & 0.47$\times$ & -0.029 \\
+Laya-EN & Qwen3-0.6B & 20 & 0.615 & 60\% & 0.92$\times$ & -0.024 \\
+Laya-EN & Jina-v2 & 20 & 0.630 & 60\% & 0.25$\times$ & -0.032 \\
+Laya-Multi & BGE-v2-m3 & 20 & 0.593 & 60\% & 0.68$\times$ & -0.057 \\
+Laya-Multi & Qwen3-0.6B & 20 & 0.587 & 60\% & 1.23$\times$ & -0.053 \\
+Laya-Multi & Jina-v2 & 20 & 0.603 & 60\% & 0.37$\times$ & -0.059 \\
+Laya-TD & BGE-v2-m3 & 20 & 0.600 & 60\% & 0.45$\times$ & -0.050 \\
+Laya-TD & Qwen3-0.6B & 20 & 0.594 & 60\% & 0.90$\times$ & -0.046 \\
+Laya-TD & Jina-v2 & 20 & 0.606 & 60\% & 0.23$\times$ & -0.057 \\
+\bottomrule
+\end{tabular}
+\end{table}

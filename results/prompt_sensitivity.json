@@ -1,0 +1,193 @@
+{
+  "laya-en": {
+    "variant_type": "rubric",
+    "variants": {
+      "four-level": {
+        "ndcg_at_10": 0.4541840207649789,
+        "per_dataset": {
+          "scifact": 0.6041933461717884,
+          "nfcorpus": 0.30417469535816927
+        }
+      },
+      "three-level": {
+        "ndcg_at_10": 0.43984953157820983,
+        "per_dataset": {
+          "scifact": 0.584931957833192,
+          "nfcorpus": 0.29476710532322775
+        }
+      },
+      "yes-no": {
+        "ndcg_at_10": 0.45579128033687544,
+        "per_dataset": {
+          "scifact": 0.5972523965549112,
+          "nfcorpus": 0.3143301641188397
+        }
+      }
+    },
+    "mean_ndcg": 0.4499416108933547,
+    "std_ndcg": 0.008776865585745558,
+    "std_ci_low": 0.0025841913976158127,
+    "std_ci_high": 0.022910282557976037
+  },
+  "laya-multi": {
+    "variant_type": "rubric",
+    "variants": {
+      "four-level": {
+        "ndcg_at_10": 0.36669341645335596,
+        "per_dataset": {
+          "scifact": 0.441535313287949,
+          "nfcorpus": 0.2918515196187629
+        }
+      },
+      "three-level": {
+        "ndcg_at_10": 0.3506111927753605,
+        "per_dataset": {
+          "scifact": 0.42940061591322604,
+          "nfcorpus": 0.271821769637495
+        }
+      },
+      "yes-no": {
+        "ndcg_at_10": 0.39567169260351776,
+        "per_dataset": {
+          "scifact": 0.5120429830769999,
+          "nfcorpus": 0.27930040213003554
+        }
+      }
+    },
+    "mean_ndcg": 0.3709921006107448,
+    "std_ndcg": 0.02283574337096515,
+    "std_ci_low": 0.012107572728789503,
+    "std_ci_high": 0.03656889198680947
+  },
+  "laya-td": {
+    "variant_type": "rubric",
+    "variants": {
+      "four-level": {
+        "ndcg_at_10": 0.39834989317718433,
+        "per_dataset": {
+          "scifact": 0.5100960664029915,
+          "nfcorpus": 0.2866037199513771
+        }
+      },
+      "three-level": {
+        "ndcg_at_10": 0.38712001848743116,
+        "per_dataset": {
+          "scifact": 0.4960492843664627,
+          "nfcorpus": 0.27819075260839965
+        }
+      },
+      "yes-no": {
+        "ndcg_at_10": 0.4063871608575223,
+        "per_dataset": {
+          "scifact": 0.5055786849390378,
+          "nfcorpus": 0.3071956367760068
+        }
+      }
+    },
+    "mean_ndcg": 0.3972856908407126,
+    "std_ndcg": 0.009677555927870127,
+    "std_ci_low": 0.0019954666071189736,
+    "std_ci_high": 0.023011492754009516
+  },
+  "bge-v2-m3": {
+    "variant_type": "none",
+    "variants": {
+      "plain": {
+        "ndcg_at_10": 0.5691334992624274,
+        "per_dataset": {
+          "scifact": 0.7774724252645726,
+          "nfcorpus": 0.3607945732602822
+        }
+      }
+    },
+    "mean_ndcg": 0.5691334992624274,
+    "std_ndcg": 0.0,
+    "std_ci_low": 0.0,
+    "std_ci_high": 0.0
+  },
+  "bge-base": {
+    "variant_type": "none",
+    "variants": {
+      "plain": {
+        "ndcg_at_10": 0.5502869788614312,
+        "per_dataset": {
+          "scifact": 0.7506635151970593,
+          "nfcorpus": 0.3499104425258031
+        }
+      }
+    },
+    "mean_ndcg": 0.5502869788614312,
+    "std_ndcg": 0.0,
+    "std_ci_low": 0.0,
+    "std_ci_high": 0.0
+  },
+  "qwen3-06b": {
+    "variant_type": "instruction",
+    "variants": {
+      "default": {
+        "ndcg_at_10": 0.6008713507811554,
+        "per_dataset": {
+          "scifact": 0.8202484096562758,
+          "nfcorpus": 0.3814942919060351
+        }
+      },
+      "none": {
+        "ndcg_at_10": 0.5912775730346133,
+        "per_dataset": {
+          "scifact": 0.8088899952081883,
+          "nfcorpus": 0.37366515086103824
+        }
+      },
+      "task": {
+        "ndcg_at_10": 0.603246117104224,
+        "per_dataset": {
+          "scifact": 0.817258248336228,
+          "nfcorpus": 0.38923398587222025
+        }
+      }
+    },
+    "mean_ndcg": 0.5984650136399976,
+    "std_ndcg": 0.006336746453365528,
+    "std_ci_low": 0.0014418419142011203,
+    "std_ci_high": 0.014364602607385115
+  },
+  "jina-v2": {
+    "variant_type": "instruction",
+    "variants": {
+      "plain": {
+        "ndcg_at_10": 0.5891846450578505,
+        "per_dataset": {
+          "scifact": 0.805864629742673,
+          "nfcorpus": 0.37250466037302793
+        }
+      },
+      "instructed": {
+        "ndcg_at_10": 0.5804728146956373,
+        "per_dataset": {
+          "scifact": 0.7914863332761688,
+          "nfcorpus": 0.36945929611510586
+        }
+      }
+    },
+    "mean_ndcg": 0.5848287298767438,
+    "std_ndcg": 0.0061601943256678355,
+    "std_ci_low": 0.0003965304274731185,
+    "std_ci_high": 0.018377388968998664
+  },
+  "minilm": {
+    "variant_type": "none",
+    "variants": {
+      "plain": {
+        "ndcg_at_10": 0.5586676917553388,
+        "per_dataset": {
+          "scifact": 0.7451421218010371,
+          "nfcorpus": 0.3721932617096405
+        }
+      }
+    },
+    "mean_ndcg": 0.5586676917553388,
+    "std_ndcg": 0.0,
+    "std_ci_low": 0.0,
+    "std_ci_high": 0.0
+  }
+}

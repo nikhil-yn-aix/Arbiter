@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\small
+\caption{Calibration of the relevance probability over all benchmark pairs (lower ECE and Brier are better, slope near 1 is ideal) and rank stability under query perturbation (Kendall $\tau$ between clean and perturbed scores, higher is more stable).}
+\label{tab:calibration}
+\begin{tabular}{lrrrrrr}
+\toprule
+Model & ECE & Brier & Slope & $\tau$ typos & $\tau$ synonyms & $\tau$ paraphrase \\
+\midrule
+Laya-EN & 0.420 & 0.260 & 0.21 & 0.709 & 0.712 & 0.646 \\
+Laya-Multi & 0.406 & 0.267 & 0.13 & 0.679 & 0.656 & 0.556 \\
+Laya-TD & 0.607 & 0.434 & 0.29 & 0.768 & 0.759 & 0.690 \\
+BGE-v2-m3 & \textbf{0.051} & \underline{0.059} & 0.51 & 0.854 & 0.794 & 0.703 \\
+BGE-base & \underline{0.058} & 0.065 & 0.46 & 0.815 & 0.741 & 0.628 \\
+Qwen3-0.6B & 0.103 & 0.102 & 0.32 & \underline{0.859} & \textbf{0.809} & \textbf{0.753} \\
+Jina-v2 & 0.063 & \textbf{0.053} & 0.75 & \textbf{0.861} & \underline{0.794} & \underline{0.707} \\
+MiniLM-L6 & 0.091 & 0.090 & 0.32 & 0.772 & 0.751 & 0.596 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\small
+\caption{nDCG@10 reranking the top 50 hybrid-retrieval candidates. Latency is the median per-query rerank time averaged over datasets; VRAM is the peak allocation. Best in bold, second best underlined.}
+\label{tab:main}
+\begin{tabular}{llrrrrrrr}
+\toprule
+Model & Type & Params & SciFact & NFCorpus & TREC-DL 2019 & TREC-DL 2020 & p50 (ms) & VRAM (GB) \\
+\midrule
+Laya-EN & Decision & 421M & 0.414 & 0.254 & 0.632 & 0.588 & 584 & 3.0 \\
+Laya-Multi & Decision & 322M & 0.356 & 0.213 & 0.551 & 0.531 & 320 & 2.1 \\
+Laya-TD & Decision & 421M & 0.345 & 0.227 & 0.609 & 0.566 & 647 & 3.2 \\
+BGE-v2-m3 & Cross-enc. & 568M & 0.751 & 0.356 & \underline{0.736} & 0.756 & 314 & 1.5 \\
+BGE-base & Cross-enc. & 278M & 0.721 & 0.328 & 0.729 & \underline{0.759} & 125 & 1.0 \\
+Qwen3-0.6B & Cross-enc. & 600M & \textbf{0.777} & \textbf{0.386} & 0.701 & 0.695 & 1007 & 3.7 \\
+Jina-v2 & Cross-enc. & 278M & \underline{0.776} & \underline{0.375} & \textbf{0.738} & \textbf{0.760} & 211 & 1.7 \\
+MiniLM-L6 & Cross-enc. & 22M & 0.690 & 0.355 & 0.735 & 0.747 & 62 & 0.3 \\
+Hybrid retrieval & None & -- & 0.727 & 0.356 & 0.634 & 0.620 & 17 & 0.8 \\
+\bottomrule
+\end{tabular}
+\end{table}

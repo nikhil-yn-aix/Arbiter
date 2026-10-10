@@ -1,0 +1,16 @@
+\begin{table}[t]
+\centering
+\small
+\caption{LoCoMo retrieval with 8,192-token passages. nDCG@10 with each passage cut to 512 tokens versus read up to the model limit; latency is per query for the full-length condition.}
+\label{tab:longcontext}
+\begin{tabular}{lrrrrr}
+\toprule
+Model & Context & nDCG@512 & nDCG@full & $\Delta$ & p50 (ms) \\
+\midrule
+Laya-Multi & 8,192 & 0.549 & 0.642 & +0.093 & 11252 \\
+Qwen3-0.6B & 32,768 & 0.618 & 0.892 & +0.274 & 10199 \\
+Jina-v2 & 1,024 & 0.603 & 0.651 & +0.047 & 407 \\
+BGE-v2-m3 & 512 & 0.688 & 0.688 & +0.000 & 289 \\
+\bottomrule
+\end{tabular}
+\end{table}
