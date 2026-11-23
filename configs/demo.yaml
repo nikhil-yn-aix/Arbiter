@@ -1,0 +1,63 @@
+# one short run of the real pipeline (about a minute on one gpu), for demonstrations
+paths:
+  data: data
+  models: models
+  cache: cache
+  runs: demo/runs
+  results: demo/results
+  figures: demo/figures
+  logs: demo/logs
+
+backbone: ModernBERT-large
+
+arms:
+  B: {label: ModernBERT-large, kind: base, dir: ModernBERT-large, card: mlm pretraining}
+
+references:
+  minilm: {label: MiniLM-L6 (MS MARCO), dir: minilm}
+  bge: {label: bge-reranker-v2-m3, dir: bge-v2-m3}
+
+train:
+  group: 8
+  queries_per_step: 8
+  micro_queries: 4
+  max_len: 256
+  warmup: 0.1
+  weight_decay: 0.01
+  clip: 1.0
+  sample_seed: 1234
+  pooling: mean
+  ckpt_every_steps: 250
+  ckpt_every_minutes: 10
+
+eval:
+  max_len: 384
+  max_tokens: 49152
+  dev_queries: 500
+  test_queries: 1000
+  heldout_negatives: 20
+  dl_depth: 100
+  beir_depth: 30
+  beir_cap: 200
+  beir: [scifact, nfcorpus, fiqa, trec-covid]
+  query_seed: 7
+
+grid:
+  budget: 1000
+  seed: 0
+  lrs: [2.0e-5]
+
+main: []
+
+extra:
+  cls_check: {budget: 1000, arms: [B], seed: 0}
+  probe_layers: [16]
+  probe_queries: 100
+
+analysis:
+  primary_budgets: [1000, 16000]
+  primary_sets: [heldout, dl]
+  equivalence_margin: {heldout: 0.015, dl: 0.02}
+  bad_run_drop: 0.05
+  bootstrap: 10000
+  alpha: 0.05
