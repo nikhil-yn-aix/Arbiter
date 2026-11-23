@@ -1,3 +1,5 @@
+import json
+
 import numpy as np
 import pandas as pd
 
@@ -101,6 +103,19 @@ def write_table(df: pd.DataFrame, path, caption: str) -> None:
     path.with_suffix(".tex").write_text("\n".join(lines) + "\n")
 
 
+def training_failures(study: Study, run_ids) -> dict:
+    """runs whose mean loss over the last tenth of training stays above 80% of the uniform-ranking loss ln(group)."""
+    chance = np.log(study.train["group"])
+    out = {}
+    for rid in run_ids:
+        for f in study.path("runs").glob(f"*/{rid}/train.jsonl"):
+            loss = [json.loads(x)["loss"] for x in f.read_text().splitlines() if x.strip()]
+            tail = float(np.mean(loss[-max(1, len(loss) // 10) :])) if loss else None
+            if tail is not None and tail > 0.8 * chance:
+                out[rid] = round(tail, 3)
+    return out
+
+
 def analyze(study: Study, log) -> dict:
     a = study.analysis
     reps, alpha = a["bootstrap"], a["alpha"]
@@ -150,6 +165,7 @@ def analyze(study: Study, log) -> dict:
         "bad_runs": bad[bad.bad].run_id.tolist(),
         "seed_sd": runs[runs.set == "heldout"].groupby(["arm", "budget"])["value"].std().dropna().round(4).to_dict(),
     }
+    out["secondary"]["stability"]["training_failures"] = training_failures(study, runs.run_id.unique())
     out["secondary"]["stability"]["seed_sd"] = {f"{k[0]}@{k[1]}": v for k, v in out["secondary"]["stability"]["seed_sd"].items()}
     curve = sm[(sm.arm == "B") & (sm.set == "heldout")].groupby("budget")["value"].mean().sort_index()
     if ("heldout", pb[0]) in effects:
@@ -170,6 +186,20 @@ def analyze(study: Study, log) -> dict:
             }
             for s in a["primary_sets"]
         }
+    swap = lv[(lv.stage == "main") & lv.shared & ~lv.tuned & (lv.pooling == "mean")]
+    if not swap.empty:
+        keys = set(zip(swap.arm, swap.budget))
+        keep = tuned[[k not in keys for k in zip(tuned.arm, tuned.budget)]]
+        alt = S.seed_mean(pd.concat([keep, swap]))
+        sens = {"replaced": sorted(f"{arm}@{int(b)}" for arm, b in keys)}
+        for b in sorted({int(b) for _, b in keys}):
+            for s in a["primary_sets"]:
+                e = S.class_effect(alt, b, s, dec, "B", reps, alpha)
+                if e:
+                    sens[f"{s}@{b}"] = {"re": e["re"], "fe": e["fe"], "per_arm": {k: {"mean": v["mean"], "ci": v["ci"]} for k, v in e["per_arm"].items()}}
+        if ("heldout", pb[0]) in effects and f"heldout@{pb[1]}" in sens:
+            sens["outcome"] = S.outcome(effects[("heldout", pb[0])]["re"], sens[f"heldout@{pb[1]}"]["re"], a["equivalence_margin"]["heldout"], alpha)
+        out["secondary"]["lr_sensitivity"] = sens
     write_json(study.path("results") / "stats.json", out)
     tables(study, lv, sm, effects, out)
     log("analyzed", outcome=out["primary"].get("outcome"))
