@@ -46,15 +46,16 @@ def selection(study: Study) -> dict:
 
 
 def main_jobs(study: Study) -> list[dict]:
-    lr = selection(study)["lr"]
+    sel = selection(study)
     jobs = []
     for block in study.main:
+        protocol = block.get("protocol", "tuned")
         for a in _arms(study, block["arms"]):
+            lr = sel["shared_lr"] if protocol == "shared" else sel["lr"][a]
             for s in block["seeds"]:
                 sets = eval_sets(study, beir=s in block.get("beir_seeds", ()))
-                jobs.append(
-                    {"stage": "main", "arm": a, "budget": block["budget"], "lr": lr[a], "seed": s, "sets": sets, "keep": s in block.get("keep_seeds", ())}
-                )
+                keep = s in block.get("keep_seeds", ())
+                jobs.append({"stage": "main", "arm": a, "budget": block["budget"], "lr": lr, "seed": s, "sets": sets, "keep": keep, "protocol": protocol})
     return jobs
 
 

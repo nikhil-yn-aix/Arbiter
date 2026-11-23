@@ -36,8 +36,9 @@ def collect(study: Study, confirmatory: bool, log) -> pd.DataFrame:
         if r.get("state") != "done":
             continue
         d = study.path("runs") / r["stage"] / r["run_id"]
-        tuned = r["stage"] == "main" or (r["stage"] == "grid" and r["lr"] == sel["lr"].get(r["arm"]))
-        shared = r["stage"] == "grid" and r["lr"] == sel.get("shared_lr")
+        protocol = r.get("protocol", "tuned")
+        tuned = (r["stage"] == "main" and protocol == "tuned") or (r["stage"] == "grid" and r["lr"] == sel["lr"].get(r["arm"]))
+        shared = (r["stage"] == "grid" and r["lr"] == sel.get("shared_lr")) or protocol == "shared"
         for name in sets:
             if name != "dev" and not confirmatory:
                 continue

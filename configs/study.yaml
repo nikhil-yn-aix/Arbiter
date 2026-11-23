@@ -59,6 +59,7 @@ main:
   - {budget: 16000, arms: [D1, D2, D3, D4, D5], seeds: [0], beir_seeds: [0], keep_seeds: [0]}
   - {budget: 4000, arms: [B, D1, D2, D3, D4, D5], seeds: [0, 1], beir_seeds: [0]}
   - {budget: 250, arms: all, seeds: [0, 1]}
+  - {budget: 16000, arms: [D1], seeds: [0], beir_seeds: [0], protocol: shared}
 
 extra:
   cls_check: {budget: 1000, arms: [B, D1, D4], seed: 0}
