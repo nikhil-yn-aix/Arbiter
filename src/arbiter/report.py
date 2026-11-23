@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from arbiter import stats as S
-from arbiter.config import Study
+from arbiter.config import Study, lr_tag
 from arbiter.data import eval_sets
 from arbiter.io import Status, read_json, write_json, write_parquet
 from arbiter.jobs import SetCache, all_runs, grid_jobs, main_jobs, run_dir, selection
@@ -260,8 +260,8 @@ def tables(study: Study, lv: pd.DataFrame, sm: pd.DataFrame, effects: dict, out:
     if sel:
         g = pd.DataFrame(sel["grid"])
         t5 = g.pivot(index="arm", columns="lr", values="dev_mrr10").round(4).reset_index()
-        t5.columns = ["arm"] + [f"lr {c:.0e}" for c in t5.columns[1:]]
-        t5["selected"] = t5["arm"].map(lambda a: f"{sel['lr'][a]:.0e}")
+        t5.columns = ["arm"] + [f"lr {lr_tag(c)}" for c in t5.columns[1:]]
+        t5["selected"] = t5["arm"].map(lambda a: lr_tag(sel["lr"][a]))
         t5["arm"] = t5["arm"].map(label)
         write_table(t5, tdir / "t5_lr_grid", "learning-rate grid at 1k queries (dev mrr@10, seed 0).")
     rs = pd.read_parquet(study.path("results") / "runs.parquet")

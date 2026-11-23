@@ -7,7 +7,7 @@ import pandas as pd
 import torch
 from safetensors.torch import save_file
 
-from arbiter.config import Study
+from arbiter.config import Study, lr_tag
 from arbiter.data import eval_sets, load_pool, load_set
 from arbiter.io import Status, read_json, run_lock, save_atomic, write_json, write_parquet
 from arbiter.metrics import per_query, rank
@@ -19,7 +19,7 @@ SEALED = ("heldout", "dl19", "dl20")
 
 
 def run_id(job: dict) -> str:
-    rid = f"{job['arm']}__q{job['budget']}__lr{job['lr']:.0e}__s{job['seed']}"
+    rid = f"{job['arm']}__q{job['budget']}__lr{lr_tag(job['lr'])}__s{job['seed']}"
     return rid + (f"__{job['pooling']}" if job.get("pooling") else "")
 
 
@@ -175,7 +175,7 @@ def select(study: Study, log) -> dict:
     best = df.groupby("arm").head(1).set_index("arm")["lr"].to_dict()
     sel = {"lr": best, "shared_lr": best["B"], "grid": rows}
     write_json(study.path("runs") / "selection.json", sel)
-    log("selection", **{a: f"{v:.0e}" for a, v in best.items()})
+    log("selection", **{a: lr_tag(v) for a, v in best.items()})
     tok = tokenizer(study)
     cache = SetCache(study)
     for j in jobs:

@@ -18,6 +18,11 @@ def _freeze(x):
     return x
 
 
+def lr_tag(lr: float) -> str:
+    short = f"{lr:.0e}"
+    return short if float(short) == lr else f"{lr:.1e}"
+
+
 @dataclass(frozen=True)
 class Study:
     raw: dict

@@ -51,7 +51,7 @@ eval:
 grid:
   budget: 1000
   seed: 0
-  lrs: [2.0e-5, 4.0e-5, 8.0e-5]
+  lrs: [1.0e-5, 2.0e-5, 4.0e-5, 8.0e-5, 1.6e-4]
 
 main:
   - {budget: 1000, arms: all, seeds: [1, 2]}

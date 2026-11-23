@@ -9,7 +9,7 @@ import pandas as pd
 from matplotlib.ticker import FixedLocator, NullLocator
 
 from arbiter import stats as S
-from arbiter.config import Study
+from arbiter.config import Study, lr_tag
 from arbiter.io import write_json
 
 FULL, HALF = 6.5, 3.2
@@ -330,7 +330,7 @@ def lr_grid_fig(study: Study, sel: dict):
     ax.set_xscale("log")
     ax.xaxis.set_major_locator(FixedLocator(sorted(g.lr.unique())))
     ax.xaxis.set_minor_locator(NullLocator())
-    ax.set_xticklabels([f"{x:.0e}".replace("e-0", "e-") for x in sorted(g.lr.unique())])
+    ax.set_xticklabels([lr_tag(x).replace("e-0", "e-") for x in sorted(g.lr.unique())])
     ax.set_xlabel("peak learning rate")
     ax.set_ylabel("dev MRR@10 (1k queries, seed 0)")
     fig.tight_layout()

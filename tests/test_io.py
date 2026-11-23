@@ -35,3 +35,9 @@ def test_lock_rejects_live_owner_and_recovers_dead(tmp_path):
     with run_lock(tmp_path):
         assert (tmp_path / "lock").read_text() == str(os.getpid())
     assert not (tmp_path / "lock").exists()
+
+
+def test_lr_tag_keeps_short_ids_and_disambiguates():
+    from arbiter.config import lr_tag
+
+    assert [lr_tag(x) for x in (1e-5, 2e-5, 8e-5, 1.6e-4)] == ["1e-05", "2e-05", "8e-05", "1.6e-04"]
