@@ -118,7 +118,7 @@ def cmd_rerank(args):
     s = score(model, tokenizer(study), cands, study.eval["max_len"], study.eval["max_tokens"])
     print(f"\nmodel: {what}\nquery: {query}\n")
     for r, i in enumerate(s.argsort()[::-1], 1):
-        print(f"  {r}. [{s[i]:+6.2f}]  {docs[i][:96]}")
+        print(f"  {r}. [{s[i]:+6.2f}]  {docs[i]}")
     print()
 
 
