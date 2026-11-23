@@ -21,6 +21,11 @@ BUDGETS = [250, 1000, 4000, 16000]
 SET_LABEL = {"heldout": "held-out MS MARCO, MRR@10", "dl": "TREC DL19+20, nDCG@10"}
 
 
+def _short(b) -> str:
+    b = int(b)
+    return f"{b // 1000}k" if b >= 1000 and b % 1000 == 0 else str(b)
+
+
 def style() -> None:
     plt.rcParams.update(
         {
@@ -77,7 +82,10 @@ def layout_issues(fig) -> list[str]:
     r = fig.canvas.get_renderer()
     boxes = []
     for ax in fig.axes:
-        for t in ax.get_xticklabels() + ax.get_yticklabels() + [ax.xaxis.label, ax.yaxis.label, ax.title] + ax.texts:
+        x0, x1 = sorted(ax.get_xlim())
+        y0, y1 = sorted(ax.get_ylim())
+        ticks = [t for t in ax.get_xticklabels() if x0 <= t.get_position()[0] <= x1] + [t for t in ax.get_yticklabels() if y0 <= t.get_position()[1] <= y1]
+        for t in ticks + [ax.xaxis.label, ax.yaxis.label, ax.title] + ax.texts:
             if t.get_visible() and t.get_text():
                 boxes.append((f"text:{t.get_text()[:20]}", t.get_window_extent(r)))
         if ax.get_legend():
@@ -105,7 +113,7 @@ def save(fig, path) -> list[str]:
     return issues
 
 
-def _fig_legend(fig, handles, ncol: int, y: float = 1.0) -> None:
+def _fig_legend(fig, handles, ncol: int, y: float = 1.02) -> None:
     fig.legend(handles=handles, loc="lower center", bbox_to_anchor=(0.5, y), ncol=ncol, handlelength=2.2, columnspacing=1.2, borderaxespad=0.2)
 
 
@@ -140,6 +148,8 @@ def learning_curves(study: Study, lv: pd.DataFrame, refs: pd.DataFrame):
             ax.fill_between(m.index, lo.values, hi.values, color=COLOR[arm], alpha=0.12, lw=0, zorder=1)
             handles[arm] = h
         for name, ls in [("BM25", (0, (5, 3))), ("minilm", (0, (1, 2))), ("bge", (0, (3, 1, 1, 1)))]:
+            if name == "BM25" and s == "heldout":
+                continue
             v = refs[(refs.arm == name) & (refs.set == s)]["value"]
             if len(v):
                 (h,) = ax.plot(
@@ -164,11 +174,12 @@ def forest(study: Study, stats: dict):
     eff = stats["descriptive"]["effects"]
     margin = study.analysis["equivalence_margin"]
     dec = study.decision_arms
-    budgets = [b for b in BUDGETS if f"heldout@{b}" in eff]
+    budgets = sorted({int(k.split("@")[1]) for k in eff if k.startswith("heldout@")})
     fig, axes = plt.subplots(2, len(budgets), figsize=(FULL, 3.3), sharey=True, squeeze=False)
     ylab = [study.arms[a]["label"] for a in dec] + ["decision class"]
     for r, s in enumerate(["heldout", "dl"]):
-        lim = max([abs(x) for b in budgets if f"{s}@{b}" in eff for v in eff[f"{s}@{b}"]["per_arm"].values() for x in v["ci"]] + [margin[s] * 1.5])
+        cis = [x for b in budgets if f"{s}@{b}" in eff for v in [*eff[f"{s}@{b}"]["per_arm"].values(), eff[f"{s}@{b}"]["re"]] for x in v["ci"]]
+        lim = max([abs(x) for x in cis] + [margin[s] * 1.5])
         for c, b in enumerate(budgets):
             ax = axes[r, c]
             ax.grid(False)
@@ -192,7 +203,7 @@ def forest(study: Study, stats: dict):
             ax.tick_params(axis="x", labelsize=6.5)
             ax.locator_params(axis="x", nbins=4)
             if r == 0:
-                ax.set_title({250: "250", 1000: "1k", 4000: "4k", 16000: "16k"}[b] + " queries", color=INK)
+                ax.set_title(f"{_short(b)} queries", color=INK)
             if c == 0:
                 ax.set_ylabel(r"$\Delta$ " + ("MRR@10" if s == "heldout" else "nDCG@10") + (" (held-out)" if s == "heldout" else " (DL)"))
     for ax in axes[1]:
@@ -207,7 +218,7 @@ def specificity(study: Study, lv: pd.DataFrame, reps: int, alpha: float):
     controls = [a for a, v in study.arms.items() if v["kind"] == "control"]
     fig, axes = plt.subplots(1, 2, figsize=(FULL, 2.1), sharey=False)
     groups = [("decision class", dec, INK, "D")] + [(study.arms[c]["label"], [c], COLOR[c], MARKER[c]) for c in controls]
-    budgets = [b for b in BUDGETS if (sm.budget == b).any() and all((sm[(sm.budget == b)].arm == c).any() for c in controls)]
+    budgets = sorted(b for b in sm.budget.unique() if all((sm[sm.budget == b].arm == c).any() for c in controls))
     handles = []
     for ax, s, letter in zip(axes, ["heldout", "dl"], "ab"):
         ax.axhline(0, color="#9a9a9a", lw=0.6)
@@ -226,7 +237,7 @@ def specificity(study: Study, lv: pd.DataFrame, reps: int, alpha: float):
             if letter == "a":
                 handles.append(h)
         ax.set_xticks(range(len(budgets)))
-        ax.set_xticklabels([{250: "250", 1000: "1k", 4000: "4k", 16000: "16k"}[b] + " queries" for b in budgets])
+        ax.set_xticklabels([f"{_short(b)} queries" for b in budgets])
         ax.set_xlim(-0.6, len(budgets) - 0.4)
         ax.set_ylabel(r"$\Delta$ vs ModernBERT-large" + ("\n(MRR@10, held-out)" if s == "heldout" else "\n(nDCG@10, DL)"))
         _panel(ax, letter)
@@ -277,25 +288,23 @@ def probes_fig(study: Study, probes: pd.DataFrame, stats: dict):
 
 
 def convergence_fig(study: Study, conv: pd.DataFrame):
-    conv = conv[conv.layer != "other"].assign(layer=lambda d: d.layer.astype(int))
+    conv = conv[conv.layer != "other"].assign(layer=lambda d: d.layer.astype(int), kept=lambda d: d.finetuned / d.initial)
     budgets = sorted(conv.budget.unique())
     fig, axes = plt.subplots(1, len(budgets), figsize=(FULL, 2.2), sharey=True, squeeze=False)
     handles = {}
     for ax, b, letter in zip(axes[0], budgets, "abcd"):
+        ax.axhline(1.0, color="#9a9a9a", lw=0.6)
         for arm in study.arms:
             g = conv[(conv.arm == arm) & (conv.budget == b)].sort_values("layer")
             if g.empty:
                 continue
-            ax.plot(g.layer, g.initial * 100, color=COLOR[arm], lw=0.9, ls=(0, (2, 1.5)), alpha=0.9)
-            handles[arm] = ax.plot(g.layer, g.finetuned * 100, color=COLOR[arm], lw=1.3, label=study.arms[arm]["label"])[0]
+            handles[arm] = ax.plot(g.layer, g.kept, color=COLOR[arm], ls=DASH.get(arm, "-"), lw=1.2, label=study.arms[arm]["label"])[0]
         ax.set_xlabel("encoder layer")
-        ax.set_title(f"{ {1000: '1k', 16000: '16k', 4000: '4k', 250: '250'}[int(b)] } training queries", color=INK)
+        ax.set_title(f"{_short(b)} training queries", color=INK)
         _panel(ax, letter)
-    axes[0][0].set_ylabel("distance to base (% of base norm)")
-    handles["init"] = axes[0][0].plot([], [], color=MUTED, lw=0.9, ls=(0, (2, 1.5)), label="before fine-tuning")[0]
-    handles["ft"] = axes[0][0].plot([], [], color=MUTED, lw=1.3, label="after fine-tuning (vs fine-tuned base)")[0]
+    axes[0][0].set_ylabel("distance to fine-tuned base\n/ distance before fine-tuning")
     fig.tight_layout(w_pad=1.5)
-    _fig_legend(fig, list(handles.values()), ncol=5)
+    _fig_legend(fig, list(handles.values()), ncol=len(handles))
     return fig
 
 

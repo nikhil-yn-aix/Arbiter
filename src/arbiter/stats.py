@@ -35,7 +35,7 @@ def bootstrap(x: np.ndarray, reps: int, seed: int = 0) -> np.ndarray:
 
 def _boot_summary(x: np.ndarray, reps: int, alpha: float) -> dict:
     b = bootstrap(x, reps)
-    p = 2 * min((b <= 0).mean(), (b >= 0).mean())
+    p = max(2 * min((b <= 0).mean(), (b >= 0).mean()), 1.0 / reps)
     lo, hi = np.quantile(b, [alpha / 2, 1 - alpha / 2])
     lo90, hi90 = np.quantile(b, [alpha, 1 - alpha])
     return {"mean": float(x.mean()), "ci": [float(lo), float(hi)], "ci90": [float(lo90), float(hi90)], "p": float(min(1.0, p)), "n_queries": int(len(x))}
