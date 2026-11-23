@@ -129,6 +129,7 @@ def train(study: Study, job: dict, run_dir: Path, tok, pool, log, stop: StopFlag
                 rate = pairs / (time.time() - t0)
                 fl.write(json.dumps({"step": i + 1, "loss": sum(acc) / len(acc), "lr": sched.get_last_lr()[0], "grad_norm": gnorm, "pairs_per_s": rate}) + "\n")
                 fl.flush()
+                log("step", step=i + 1, of=steps, loss=round(sum(acc) / len(acc), 3))
                 acc = []
             due = (i + 1) % tr["ckpt_every_steps"] == 0 or time.time() - last_ckpt > 60 * tr["ckpt_every_minutes"]
             if stop.set or (due and i + 1 < steps):
