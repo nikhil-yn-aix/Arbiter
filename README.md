@@ -7,7 +7,7 @@
 Nikhil Y N · Mohamed Qurrain Shayeeb · Prithvi K M · Praneel S<br>
 <sub>Department of Computer Science and Engineering, Ramaiah Institute of Technology, Bengaluru</sub>
 
-[paper (journal)](paper/journal/main.pdf) · [paper (conference)](paper/conference/main.pdf) · [demo video](video/arbiter_demo.mp4) · MIT
+[paper (journal)](paper/journal/journal_main.pdf) · [paper (conference)](paper/conference/conf_main.pdf) · [demo video](video/arbiter_demo.mp4) · MIT
 
 </div>
 
