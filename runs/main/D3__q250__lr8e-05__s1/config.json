@@ -1,0 +1,17 @@
+{
+ "arm": "D3",
+ "budget": 250,
+ "config_digest": "eab509aaed3046e7",
+ "keep": false,
+ "lr": 8e-05,
+ "protocol": "tuned",
+ "run_id": "D3__q250__lr8e-05__s1",
+ "seed": 1,
+ "sets": [
+  "dev",
+  "heldout",
+  "dl19",
+  "dl20"
+ ],
+ "stage": "main"
+}

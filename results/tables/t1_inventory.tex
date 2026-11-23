@@ -1,0 +1,17 @@
+\begin{table}[t]
+\centering
+\caption{checkpoints. drift is relative l2 distance of encoder weights from ModernBERT-large; cos is the cosine between drift vectors.}
+\begin{tabular}{l r r r r r}
+\toprule
+arm & checkpoint & role & card-reported data & rel. drift & closest arm (cos) \\
+\midrule
+D1 & Laya & decision & undisclosed decision corpus (rlcd) & 4.94\% & von (0.04) \\
+D2 & Beveridge & decision & operations documents and logs & 3.35\% & Laya (0.04) \\
+D3 & von & decision & decision corpus incl. anli; built on the nli checkpoint & 3.71\% & NLI (0.85) \\
+D4 & solvi & decision & squad2 boolq vitaminc & 1.40\% & Beveridge (0.02) \\
+D5 & cortex & decision & swe and cve typed decisions & 0.68\% & Laya (0.01) \\
+N & NLI & control & glue (incl. qnli) and anli & 3.11\% & von (0.85) \\
+R & Noise & control & gaussian noise matched to laya drift & 4.94\% & cortex (0.00) \\
+\bottomrule
+\end{tabular}
+\end{table}

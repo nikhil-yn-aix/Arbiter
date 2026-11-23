@@ -173,7 +173,7 @@ def learning_curves(study: Study, lv: pd.DataFrame, refs: pd.DataFrame, failed=(
         _panel(ax, letter)
     fig.tight_layout(w_pad=2.0)
     if handles.pop("failed", None) is not None:
-        handles["failed"] = Line2D([], [], ls="", marker="o", mfc="white", mec="#555555", mew=0.9, ms=4, label="failed run (not in line)")
+        handles["failed"] = Line2D([], [], ls="", marker="o", mfc="white", mec="#555555", mew=0.9, ms=4, label="collapsed run (not in line)")
     _fig_legend(fig, list(handles.values()), ncol=6)
     return fig
 
@@ -185,7 +185,7 @@ def forest(study: Study, stats: dict):
     budgets = sorted({int(k.split("@")[1]) for k in eff if k.startswith("heldout@")})
     fx = stats["secondary"].get("failure_excluded", {})
     fig, axes = plt.subplots(2, len(budgets), figsize=(FULL, 3.6), sharey=True, squeeze=False)
-    ylab = [study.arms[a]["label"] for a in dec] + ["decision class"] + (["excl. failed runs"] if fx else [])
+    ylab = [study.arms[a]["label"] for a in dec] + ["decision class"] + (["excl. collapsed runs"] if fx else [])
     for r, s in enumerate(["heldout", "dl"]):
         cis = [x for b in budgets if f"{s}@{b}" in eff for v in [*eff[f"{s}@{b}"]["per_arm"].values(), eff[f"{s}@{b}"]["re"]] for x in v["ci"]]
         lim = max([abs(x) for x in cis] + [margin[s] * 1.5])
@@ -281,12 +281,29 @@ def probes_fig(study: Study, probes: pd.DataFrame, stats: dict):
     ax.set_ylabel("linear probe dev MRR@10")
     _panel(ax, "a")
     ax = axes[1]
-    eff = stats["descriptive"]["effects"].get("heldout@1000", {}).get("per_arm", {})
+    block = stats["descriptive"]["effects"].get("heldout@1000", {})
+    gain = {a: v["mean"] for a, v in block.get("per_arm", {}).items()}
+    spec = stats.get("secondary", {}).get("specificity", {})
+    for c in ("N", "R"):
+        if f"{c}_1000_heldout" in spec and "fe" in block:
+            gain[c] = block["fe"]["mean"] - spec[f"{c}_1000_heldout"]["mean"]
+    gain["B"] = 0.0
     best = probes.groupby("arm")["dev_mrr10"].max()
     base_best = best.get("B", np.nan)
-    pts = [(a, best[a] - base_best, eff[a]["mean"]) for a in eff if a in best]
+    pts = [(a, best[a] - base_best, gain[a]) for a in study.arms if a in gain and a in best]
+    xmax = max(p[1] for p in pts) if pts else 0.0
     for a, x, y in pts:
         ax.plot(x, y, marker=MARKER[a], color=COLOR[a], ls="none", markeredgecolor="white", ms=5)
+        right = x > 0.8 * xmax
+        ax.annotate(
+            study.arms[a]["label"].replace("ModernBERT-large", "base"),
+            (x, y),
+            xytext=(-4 if right else 4, 3),
+            textcoords="offset points",
+            ha="right" if right else "left",
+            fontsize=6.5,
+            color=MUTED,
+        )
     ax.axhline(0, color="#9a9a9a", lw=0.6)
     ax.axvline(0, color="#9a9a9a", lw=0.6)
     ax.set_xlabel(r"$\Delta$ best-layer probe vs base")

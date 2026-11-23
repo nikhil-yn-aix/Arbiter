@@ -1,0 +1,21 @@
+{
+ "arm": "D1",
+ "budget": 16000,
+ "config_digest": "eab509aaed3046e7",
+ "keep": false,
+ "lr": 2e-05,
+ "protocol": "shared",
+ "run_id": "D1__q16000__lr2e-05__s0",
+ "seed": 0,
+ "sets": [
+  "dev",
+  "heldout",
+  "dl19",
+  "dl20",
+  "beir-scifact",
+  "beir-nfcorpus",
+  "beir-fiqa",
+  "beir-trec-covid"
+ ],
+ "stage": "main"
+}

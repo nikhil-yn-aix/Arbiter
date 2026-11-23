@@ -1,0 +1,20 @@
+{
+ "arm": "B",
+ "budget": 16000,
+ "config_digest": "ab35ad245b27d407",
+ "keep": true,
+ "lr": 2e-05,
+ "run_id": "B__q16000__lr2e-05__s0",
+ "seed": 0,
+ "sets": [
+  "dev",
+  "heldout",
+  "dl19",
+  "dl20",
+  "beir-scifact",
+  "beir-nfcorpus",
+  "beir-fiqa",
+  "beir-trec-covid"
+ ],
+ "stage": "main"
+}

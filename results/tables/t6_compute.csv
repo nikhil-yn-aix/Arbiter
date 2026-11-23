@@ -1,0 +1,5 @@
+stage,runs,gpu_hours,pairs_per_s
+extra,3,0.05,128.79
+grid,40,0.68,129.09
+main,52,3.35,129.2
+references,2,0.0,

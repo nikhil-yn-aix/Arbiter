@@ -1,0 +1,14 @@
+{
+ "attempts": 0,
+ "beir-fiqa_seconds": 1.3282854557037354,
+ "beir-nfcorpus_seconds": 1.7844433784484863,
+ "beir-scifact_seconds": 1.961766004562378,
+ "beir-trec-covid_seconds": 0.574368953704834,
+ "dev_mrr10": 0.5601428571428572,
+ "dev_seconds": 1.0124425888061523,
+ "dl19_seconds": 0.4269530773162842,
+ "dl20_seconds": 0.5242252349853516,
+ "heldout_seconds": 2.1600029468536377,
+ "state": "done",
+ "updated": 1795419311.3108628
+}

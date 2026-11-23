@@ -1,0 +1,18 @@
+\begin{table}[t]
+\centering
+\caption{learning-rate grid at 1k queries (dev mrr@10, seed 0).}
+\begin{tabular}{l r r r r r r}
+\toprule
+arm & lr 1e-05 & lr 2e-05 & lr 4e-05 & lr 8e-05 & lr 1.6e-04 & selected \\
+\midrule
+ModernBERT-large & 0.5064 & 0.5441 & 0.5353 & 0.5106 & 0.3541 & 2e-05 \\
+Laya & 0.4582 & 0.4996 & 0.5128 & 0.546 & 0.5562 & 1.6e-04 \\
+Beveridge & 0.5076 & 0.5457 & 0.5838 & 0.5779 & 0.5781 & 4e-05 \\
+von & 0.5423 & 0.5573 & 0.5573 & 0.5899 & 0.5609 & 8e-05 \\
+solvi & 0.5341 & 0.5531 & 0.5686 & 0.5627 & 0.5617 & 4e-05 \\
+cortex & 0.4033 & 0.5131 & 0.5374 & 0.3376 & 0.3447 & 4e-05 \\
+NLI & 0.5603 & 0.5665 & 0.5816 & 0.5807 & 0.5564 & 4e-05 \\
+Noise & 0.5097 & 0.5353 & 0.5489 & 0.2841 & 0.3611 & 4e-05 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,13 @@
+{
+ "arm": "D3",
+ "budget": 1000,
+ "config_digest": "d7327193cfb5f6ac",
+ "keep": true,
+ "lr": 8e-05,
+ "run_id": "D3__q1000__lr8e-05__s0",
+ "seed": 0,
+ "sets": [
+  "dev"
+ ],
+ "stage": "grid"
+}

@@ -1,0 +1,11 @@
+{
+ "config_digest": "eab509aaed3046e7",
+ "cuda": "13.2",
+ "dirty": false,
+ "gpu": "NVIDIA GeForce RTX 3090, 595.99.02, 350.00 W",
+ "host": "axiom",
+ "python": "3.12.16",
+ "sha": "04b6b34c8e875870e8d2c245eef8e06451504a13",
+ "torch": "2.15.0+cu132",
+ "transformers": "5.24.0"
+}

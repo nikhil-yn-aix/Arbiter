@@ -1,0 +1,9 @@
+{
+ "arm": "bge",
+ "budget": null,
+ "label": "bge-reranker-v2-m3",
+ "lr": null,
+ "run_id": "bge",
+ "seed": 0,
+ "stage": "references"
+}

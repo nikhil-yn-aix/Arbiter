@@ -1,0 +1,11 @@
+{
+ "f1_learning_curves": [],
+ "f2_forest": [],
+ "f3_specificity": [],
+ "f4_probes": [
+  "text:von x text:solvi"
+ ],
+ "f5_convergence": [],
+ "fa1_lr_grid": [],
+ "fa2_loss": []
+}

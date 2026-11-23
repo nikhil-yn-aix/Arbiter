@@ -1,0 +1,9 @@
+{
+ "arm": "minilm",
+ "budget": null,
+ "label": "MiniLM-L6 (MS MARCO)",
+ "lr": null,
+ "run_id": "minilm",
+ "seed": 0,
+ "stage": "references"
+}

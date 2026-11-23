@@ -1,0 +1,17 @@
+{
+ "arm": "D2",
+ "budget": 4000,
+ "config_digest": "eab509aaed3046e7",
+ "keep": false,
+ "lr": 4e-05,
+ "protocol": "tuned",
+ "run_id": "D2__q4000__lr4e-05__s1",
+ "seed": 1,
+ "sets": [
+  "dev",
+  "heldout",
+  "dl19",
+  "dl20"
+ ],
+ "stage": "main"
+}

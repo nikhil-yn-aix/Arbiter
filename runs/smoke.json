@@ -1,0 +1,17 @@
+{
+ "fp16_max_abs": 0.05074203014373779,
+ "fp16_spearman": 0.9999830949733768,
+ "infer_pairs_per_s": 816.3389869566504,
+ "load_B": 170,
+ "load_D1": 170,
+ "load_D2": 170,
+ "load_D3": 170,
+ "load_D4": 170,
+ "load_D5": 170,
+ "load_N": 170,
+ "load_R": 170,
+ "ok": true,
+ "peak_mem_gb": 18.705571174621582,
+ "resume_max_abs_diff": 6.608106195926666e-05,
+ "train_pairs_per_s": 130.1863021574734
+}

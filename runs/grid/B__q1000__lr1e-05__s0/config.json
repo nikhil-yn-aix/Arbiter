@@ -1,0 +1,13 @@
+{
+ "arm": "B",
+ "budget": 1000,
+ "config_digest": "ab35ad245b27d407",
+ "keep": true,
+ "lr": 1e-05,
+ "run_id": "B__q1000__lr1e-05__s0",
+ "seed": 0,
+ "sets": [
+  "dev"
+ ],
+ "stage": "grid"
+}

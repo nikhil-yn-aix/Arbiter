@@ -1,0 +1,21 @@
+{
+ "arm": "D4",
+ "budget": 16000,
+ "config_digest": "eab509aaed3046e7",
+ "keep": true,
+ "lr": 4e-05,
+ "protocol": "tuned",
+ "run_id": "D4__q16000__lr4e-05__s0",
+ "seed": 0,
+ "sets": [
+  "dev",
+  "heldout",
+  "dl19",
+  "dl20",
+  "beir-scifact",
+  "beir-nfcorpus",
+  "beir-fiqa",
+  "beir-trec-covid"
+ ],
+ "stage": "main"
+}

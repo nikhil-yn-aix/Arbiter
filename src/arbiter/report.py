@@ -119,6 +119,48 @@ def training_failures(study: Study, run_ids) -> dict:
     return out
 
 
+def exploratory(study: Study, tuned: pd.DataFrame, failed: set, bad: set, reps: int, alpha: float) -> dict:
+    """post-unsealing sensitivity checks at the small primary budget."""
+    a, dec = study.analysis, study.decision_arms
+    b = a["primary_budgets"][0]
+    controls = [c for c, v in study.arms.items() if v["kind"] == "control"]
+    base_bad = {r for r in bad if r.startswith("B__") and f"__q{b}__" in r}
+    views = {
+        "excl_failed": tuned[~tuned.run_id.isin(failed)],
+        "excl_failed_and_base_bad": tuned[~tuned.run_id.isin(failed | base_bad)],
+        "seed0": tuned[(tuned.seed == 0) & ~tuned.run_id.isin(failed)],
+        "seeds12": tuned[(tuned.seed > 0) & ~tuned.run_id.isin(failed)],
+    }
+    out = {"budget": b, "base_bad_excluded": sorted(base_bad)}
+    for name, view in views.items():
+        vsm = S.seed_mean(view)
+        for s in a["primary_sets"]:
+            e = S.class_effect(vsm, b, s, dec, "B", reps, alpha)
+            if e:
+                out[f"{name}/class/{s}"] = e["re"]
+            if name == "excl_failed":
+                for ctl in controls:
+                    c = S.contrast(vsm, b, s, [ctl], "B", reps, alpha)
+                    if c:
+                        out[f"{name}/{ctl}_minus_B/{s}"] = c
+    return out
+
+
+def probe_rank(probes: pd.DataFrame, sm: pd.DataFrame, budget: int) -> dict:
+    """spearman between best-layer frozen probe gain and fine-tuned held-out gain over all arms, exact permutation p."""
+    from itertools import permutations
+
+    best = probes.groupby("arm")["dev_mrr10"].max()
+    ft = sm[(sm.set == "heldout") & (sm.budget == budget)].groupby("arm")["value"].mean()
+    arms = [x for x in best.index if x in ft.index]
+    x = (best[arms] - best["B"]).rank().to_numpy()
+    y = (ft[arms] - ft["B"]).rank().to_numpy()
+    rho = lambda yy: float(np.corrcoef(x, yy)[0, 1])
+    obs = rho(y)
+    perms = [rho(y[list(p)]) for p in permutations(range(len(arms)))]
+    return {"arms": arms, "rho": obs, "p_exact": float(np.mean([abs(r) >= abs(obs) - 1e-12 for r in perms]))}
+
+
 def analyze(study: Study, log) -> dict:
     a = study.analysis
     reps, alpha = a["bootstrap"], a["alpha"]
@@ -185,6 +227,7 @@ def analyze(study: Study, log) -> dict:
         if all(f"heldout@{b}" in fx for b in pb):
             fx["outcome"] = S.outcome(fx[f"heldout@{pb[0]}"]["re"], fx[f"heldout@{pb[1]}"]["re"], a["equivalence_margin"]["heldout"], alpha)
         out["secondary"]["failure_excluded"] = fx
+        out["secondary"]["exploratory"] = exploratory(study, tuned, failed, set(out["secondary"]["stability"]["bad_runs"]), reps, alpha)
     out["secondary"]["stability"]["seed_sd"] = {f"{k[0]}@{k[1]}": v for k, v in out["secondary"]["stability"]["seed_sd"].items()}
     curve = sm[(sm.arm == "B") & (sm.set == "heldout")].groupby("budget")["value"].mean().sort_index()
     if ("heldout", pb[0]) in effects:
@@ -219,6 +262,12 @@ def analyze(study: Study, log) -> dict:
         if ("heldout", pb[0]) in effects and f"heldout@{pb[1]}" in sens:
             sens["outcome"] = S.outcome(effects[("heldout", pb[0])]["re"], sens[f"heldout@{pb[1]}"]["re"], a["equivalence_margin"]["heldout"], alpha)
         out["secondary"]["lr_sensitivity"] = sens
+    out["descriptive"]["without_D4"] = {
+        f"{s}@{b}": S.class_effect(sm, b, s, [d for d in dec if d != "D4"], "B", reps, alpha)["re"] for b in pb for s in a["primary_sets"] if (s, b) in effects
+    }
+    probes_path = study.path("runs") / "extra" / "probes.parquet"
+    if probes_path.exists():
+        out["descriptive"]["probe_vs_finetuned"] = probe_rank(pd.read_parquet(probes_path), sm, pb[0])
     write_json(study.path("results") / "stats.json", out)
     tables(study, lv, sm, effects, out)
     log("analyzed", outcome=out["primary"].get("outcome"))

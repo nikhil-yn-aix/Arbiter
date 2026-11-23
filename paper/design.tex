@@ -1,0 +1,35 @@
+\begin{tikzpicture}[
+  font=\footnotesize,
+  box/.style={draw=black!55, rounded corners=2pt, align=left, inner sep=5pt, text width=#1, minimum height=3.55cm},
+  head/.style={font=\footnotesize\bfseries},
+  arr/.style={-{Stealth[length=5pt]}, thick, black!60},
+  node distance=0.42cm
+]
+\node[box=3.55cm] (a) {%
+  {\bfseries 1. Starting points}\\[2pt]
+  same architecture, same tokenizer\\[3pt]
+  \textbf{B}\ \ ModernBERT-large (base)\\
+  \textbf{D1--D5}\ \ five public\\\ \ \ \ \ \ \ \ \ decision models\\
+  \textbf{N}\ \ NLI checkpoint\\
+  \textbf{R}\ \ base + random noise\\\ \ \ \ \ \ \ \ \ of Laya's size};
+\node[box=3.75cm, right=of a] (b) {%
+  {\bfseries 2. Same recipe}\\[2pt]
+  keep encoder, add a fresh\\ scoring head (same per seed)\\[3pt]
+  listwise loss: 1 relevant\\ + 7 BM25 negatives per query\\[3pt]
+  250 / 1k / 4k / 16k queries\\
+  own learning rate per start};
+\node[box=3.5cm, right=of b] (c) {%
+  {\bfseries 3. Sealed test sets}\\[2pt]
+  \textbf{held-out MS MARCO}\\ 1{,}000 queries, MRR@10\\[2pt]
+  \textbf{TREC DL 2019+2020}\\ 97 queries, nDCG@10\\[2pt]
+  BEIR (4 sets, exploratory)\\[2pt]
+  read once, after all training};
+\node[box=3.65cm, right=of c] (d) {%
+  {\bfseries 4. Preregistered test}\\[2pt]
+  class effect: mean of\\ (D$_i$ $-$ B) over D1--D5\\[3pt]
+  at 1k and 16k queries,\\ Holm-corrected\\[3pt]
+  equivalence margin\\ $\pm$0.015 MRR@10};
+\draw[arr] (a) -- (b);
+\draw[arr] (b) -- (c);
+\draw[arr] (c) -- (d);
+\end{tikzpicture}

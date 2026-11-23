@@ -1,0 +1,16 @@
+{
+ "arm": "N",
+ "budget": 1000,
+ "config_digest": "ab35ad245b27d407",
+ "keep": false,
+ "lr": 4e-05,
+ "run_id": "N__q1000__lr4e-05__s2",
+ "seed": 2,
+ "sets": [
+  "dev",
+  "heldout",
+  "dl19",
+  "dl20"
+ ],
+ "stage": "main"
+}

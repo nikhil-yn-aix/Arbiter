@@ -7,14 +7,10 @@ __pycache__/
 data/
 models/
 cache/
-runs/
-results/
-figures/
 logs/
 docs/
-paper/
 .claude/
 CLAUDE.md
 .env
-*.pdf
 dry/
+*.safetensors

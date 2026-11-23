@@ -1,0 +1,18 @@
+{
+ "attempts": 1,
+ "dev_mrr10": 0.5618301587301587,
+ "dev_seconds": 12.715595245361328,
+ "dl19_seconds": 4.9903459548950195,
+ "dl20_seconds": 6.513417720794678,
+ "finished": 1795402197.7388883,
+ "heldout_seconds": 24.567213535308838,
+ "micro_queries": 4,
+ "pairs_per_s": 130.72502820034563,
+ "peak_mem_gb": 16.562334060668945,
+ "resumed_from": 0,
+ "started": 1795402075.7903793,
+ "state": "done",
+ "steps": 125,
+ "train_seconds": 61.19715642929077,
+ "updated": 1795402197.7389407
+}

@@ -1,0 +1,22 @@
+{
+ "attempts": 1,
+ "beir-fiqa_seconds": 18.41340136528015,
+ "beir-nfcorpus_seconds": 25.597422122955322,
+ "beir-scifact_seconds": 25.06675100326538,
+ "beir-trec-covid_seconds": 5.536053419113159,
+ "dev_mrr10": 0.611284126984127,
+ "dev_seconds": 13.282557964324951,
+ "dl19_seconds": 5.012828350067139,
+ "dl20_seconds": 6.5176990032196045,
+ "finished": 1795418926.0755458,
+ "heldout_seconds": 24.686084747314453,
+ "micro_queries": 4,
+ "pairs_per_s": 126.04942335234941,
+ "peak_mem_gb": 16.578073501586914,
+ "resumed_from": 0,
+ "started": 1795417770.9159288,
+ "state": "done",
+ "steps": 2000,
+ "train_seconds": 1015.4746971130371,
+ "updated": 1795418926.075782
+}
