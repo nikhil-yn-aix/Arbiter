@@ -221,9 +221,9 @@ def tables(study: Study, lv: pd.DataFrame, sm: pd.DataFrame, effects: dict, out:
                     pd.DataFrame(
                         [
                             {
-                                "arm": f"Δ class ({s})",
+                                "arm": f"Δ class, {e['re']['k']} ckpts ({s})",
                                 "budget": b,
-                                "seeds": e["re"]["k"],
+                                "seeds": "–",
                                 s: f"{re['mean']:+.3f} [{re['ci'][0]:+.3f}, {re['ci'][1]:+.3f}] p={re['p']:.3f}",
                             }
                         ]
