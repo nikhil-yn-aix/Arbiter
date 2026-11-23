@@ -103,14 +103,17 @@ def write_table(df: pd.DataFrame, path, caption: str) -> None:
     path.with_suffix(".tex").write_text("\n".join(lines) + "\n")
 
 
+MIN_LOGS = 10
+
+
 def training_failures(study: Study, run_ids) -> dict:
-    """runs whose mean loss over the last tenth of training stays above 80% of the uniform-ranking loss ln(group)."""
+    """runs of at least 100 steps whose mean loss over the last tenth stays above 80% of the uniform-ranking loss ln(group)."""
     chance = np.log(study.train["group"])
     out = {}
     for rid in run_ids:
         for f in study.path("runs").glob(f"*/{rid}/train.jsonl"):
             loss = [json.loads(x)["loss"] for x in f.read_text().splitlines() if x.strip()]
-            tail = float(np.mean(loss[-max(1, len(loss) // 10) :])) if loss else None
+            tail = float(np.mean(loss[-max(1, len(loss) // 10) :])) if len(loss) >= MIN_LOGS else None
             if tail is not None and tail > 0.8 * chance:
                 out[rid] = round(tail, 3)
     return out
@@ -166,6 +169,22 @@ def analyze(study: Study, log) -> dict:
         "seed_sd": runs[runs.set == "heldout"].groupby(["arm", "budget"])["value"].std().dropna().round(4).to_dict(),
     }
     out["secondary"]["stability"]["training_failures"] = training_failures(study, runs.run_id.unique())
+    failed = set(out["secondary"]["stability"]["training_failures"])
+    if failed:
+        fsm = S.seed_mean(tuned[~tuned.run_id.isin(failed)])
+        fx = {"excluded": sorted(failed)}
+        for b in budgets:
+            for s in a["primary_sets"]:
+                e = S.class_effect(fsm, b, s, dec, "B", reps, alpha)
+                if e:
+                    fx[f"{s}@{b}"] = {"re": e["re"], "fe": e["fe"], "per_arm": {k: {"mean": v["mean"], "ci": v["ci"]} for k, v in e["per_arm"].items()}}
+                for ctl in [c for c, v in study.arms.items() if v["kind"] == "control"]:
+                    c = S.contrast(fsm, b, s, dec, ctl, reps, alpha)
+                    if c:
+                        fx[f"vs_{ctl}_{s}@{b}"] = c
+        if all(f"heldout@{b}" in fx for b in pb):
+            fx["outcome"] = S.outcome(fx[f"heldout@{pb[0]}"]["re"], fx[f"heldout@{pb[1]}"]["re"], a["equivalence_margin"]["heldout"], alpha)
+        out["secondary"]["failure_excluded"] = fx
     out["secondary"]["stability"]["seed_sd"] = {f"{k[0]}@{k[1]}": v for k, v in out["secondary"]["stability"]["seed_sd"].items()}
     curve = sm[(sm.arm == "B") & (sm.set == "heldout")].groupby("budget")["value"].mean().sort_index()
     if ("heldout", pb[0]) in effects:
@@ -304,3 +323,20 @@ def tables(study: Study, lv: pd.DataFrame, sm: pd.DataFrame, effects: dict, out:
             .round(2)
         )
         write_table(t6, tdir / "t6_compute", "training compute by stage (scoring time excluded).")
+    sec = out["secondary"]
+    variants = [("preregistered", {f"{k[0]}@{k[1]}": v for k, v in effects.items()}), ("excl. failed runs", sec.get("failure_excluded", {}))]
+    variants.append(("laya 16k at base lr", sec.get("lr_sensitivity", {})))
+    rows = []
+    for name, src in variants:
+        for b in study.analysis["primary_budgets"]:
+            row = {"analysis": name, "budget": b}
+            for st in study.analysis["primary_sets"]:
+                e = src.get(f"{st}@{b}")
+                row[st] = f"{e['re']['mean']:+.3f} [{e['re']['ci'][0]:+.3f}, {e['re']['ci'][1]:+.3f}] (k={e['re']['k']})" if e else "–"
+            if any(row[st] != "–" for st in study.analysis["primary_sets"]):
+                rows.append(row)
+    write_table(
+        pd.DataFrame(rows),
+        tdir / "t7_sensitivity",
+        "class effect over decision checkpoints (random effects, 95% t interval) under the preregistered analysis and two sensitivity analyses.",
+    )

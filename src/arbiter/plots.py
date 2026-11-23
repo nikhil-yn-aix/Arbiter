@@ -6,6 +6,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from matplotlib.lines import Line2D
 from matplotlib.ticker import FixedLocator, NullLocator
 
 from arbiter import stats as S
@@ -121,8 +122,10 @@ def run_means(lv: pd.DataFrame) -> pd.DataFrame:
     return lv.groupby(["run_id", "arm", "budget", "seed", "set"], as_index=False)["value"].mean()
 
 
-def learning_curves(study: Study, lv: pd.DataFrame, refs: pd.DataFrame):
+def learning_curves(study: Study, lv: pd.DataFrame, refs: pd.DataFrame, failed=()):
     rm = run_means(lv[lv.tuned & (lv.pooling == "mean")])
+    bad = rm[rm.run_id.isin(failed)]
+    rm = rm[~rm.run_id.isin(failed)]
     fig, axes = plt.subplots(1, 2, figsize=(FULL, 2.35))
     handles = {}
     for ax, s, letter in zip(axes, ["heldout", "dl"], "ab"):
@@ -147,6 +150,9 @@ def learning_curves(study: Study, lv: pd.DataFrame, refs: pd.DataFrame):
             )
             ax.fill_between(m.index, lo.values, hi.values, color=COLOR[arm], alpha=0.12, lw=0, zorder=1)
             handles[arm] = h
+            f = bad[(bad.set == s) & (bad.arm == arm)]
+            if len(f):
+                handles["failed"] = ax.scatter(f.budget, f.value, s=14, facecolors="white", edgecolors=COLOR[arm], linewidths=0.9, marker=MARKER[arm], zorder=4)
         for name, ls in [("BM25", (0, (5, 3))), ("minilm", (0, (1, 2))), ("bge", (0, (3, 1, 1, 1)))]:
             if name == "BM25" and s == "heldout":
                 continue
@@ -166,6 +172,8 @@ def learning_curves(study: Study, lv: pd.DataFrame, refs: pd.DataFrame):
         ax.set_ylabel(SET_LABEL[s])
         _panel(ax, letter)
     fig.tight_layout(w_pad=2.0)
+    if handles.pop("failed", None) is not None:
+        handles["failed"] = Line2D([], [], ls="", marker="o", mfc="white", mec="#555555", mew=0.9, ms=4, label="failed run (not in line)")
     _fig_legend(fig, list(handles.values()), ncol=6)
     return fig
 
@@ -175,8 +183,9 @@ def forest(study: Study, stats: dict):
     margin = study.analysis["equivalence_margin"]
     dec = study.decision_arms
     budgets = sorted({int(k.split("@")[1]) for k in eff if k.startswith("heldout@")})
-    fig, axes = plt.subplots(2, len(budgets), figsize=(FULL, 3.3), sharey=True, squeeze=False)
-    ylab = [study.arms[a]["label"] for a in dec] + ["decision class"]
+    fx = stats["secondary"].get("failure_excluded", {})
+    fig, axes = plt.subplots(2, len(budgets), figsize=(FULL, 3.6), sharey=True, squeeze=False)
+    ylab = [study.arms[a]["label"] for a in dec] + ["decision class"] + (["excl. failed runs"] if fx else [])
     for r, s in enumerate(["heldout", "dl"]):
         cis = [x for b in budgets if f"{s}@{b}" in eff for v in [*eff[f"{s}@{b}"]["per_arm"].values(), eff[f"{s}@{b}"]["re"]] for x in v["ci"]]
         lim = max([abs(x) for x in cis] + [margin[s] * 1.5])
@@ -196,6 +205,11 @@ def forest(study: Study, stats: dict):
                 k = len(dec)
                 ax.plot(re["ci"], [k, k], color=INK, lw=1.6, solid_capstyle="round")
                 ax.plot(re["mean"], k, marker="D", color=INK, markeredgecolor="white", ms=4.6)
+            if f"{s}@{b}" in fx:
+                re = fx[f"{s}@{b}"]["re"]
+                k = len(dec) + 1
+                ax.plot(re["ci"], [k, k], color=INK, lw=1.6, solid_capstyle="round")
+                ax.plot(re["mean"], k, marker="D", color="white", markeredgecolor=INK, markeredgewidth=1.0, ms=4.4)
             ax.set_xlim(-lim * 1.08, lim * 1.08)
             ax.set_yticks(range(len(ylab)))
             ax.set_yticklabels(ylab)
@@ -206,8 +220,7 @@ def forest(study: Study, stats: dict):
                 ax.set_title(f"{_short(b)} queries", color=INK)
             if c == 0:
                 ax.set_ylabel(r"$\Delta$ " + ("MRR@10" if s == "heldout" else "nDCG@10") + (" (held-out)" if s == "heldout" else " (DL)"))
-    for ax in axes[1]:
-        ax.set_xlabel("difference from ModernBERT-large")
+    fig.supxlabel("difference from ModernBERT-large (95% interval; shaded band: equivalence margin)", fontsize=8, color=INK, y=0.01)
     fig.tight_layout(w_pad=0.8, h_pad=1.2)
     return fig
 
@@ -342,9 +355,12 @@ def loss_fig(study: Study, runs_dir):
     fig, ax = plt.subplots(figsize=(HALF, 2.2))
     handles = {}
     for f in sorted(runs_dir.glob("main/*__q16000__*__s0/train.jsonl")):
-        arm = f.parent.name.split("__")[0]
+        cfg = json.loads((f.parent / "config.json").read_text())
+        arm, shared = cfg["arm"], cfg.get("protocol") == "shared"
+        label = study.arms[arm]["label"] + (f" (base lr {lr_tag(cfg['lr'])})" if shared else "")
         d = pd.read_json(f, lines=True)
-        handles[arm] = ax.plot(d.step, d.loss.rolling(10, min_periods=1).mean(), color=COLOR[arm], lw=1.0, label=study.arms[arm]["label"])[0]
+        line = ax.plot(d.step, d.loss.rolling(10, min_periods=1).mean(), color=COLOR[arm], lw=1.0, ls=(0, (3, 1.5)) if shared else "-", label=label)
+        handles[label] = line[0]
     ax.set_xlabel("optimizer step (16k queries)")
     ax.set_ylabel("training loss (listwise CE)")
     fig.tight_layout()
@@ -363,7 +379,7 @@ def render_all(study: Study, log) -> dict:
     report = {}
     a = study.analysis
     todo = {
-        "f1_learning_curves": lambda: learning_curves(study, lv, refs),
+        "f1_learning_curves": lambda: learning_curves(study, lv, refs, stats["secondary"]["stability"].get("training_failures", {})),
         "f2_forest": lambda: forest(study, stats),
         "f3_specificity": lambda: specificity(study, lv, a["bootstrap"], a["alpha"]),
     }
