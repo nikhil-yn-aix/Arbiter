@@ -1,0 +1,48 @@
+[project]
+name = "arbiter"
+version = "1.0.0"
+description = "decision models as warm starts for cross-encoder rerankers: a controlled study"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "torch",
+    "transformers>=5.10,<6",
+    "bm25s",
+    "pystemmer",
+    "numpy",
+    "scipy",
+    "pandas",
+    "pyarrow",
+    "matplotlib",
+    "pyyaml",
+    "huggingface-hub",
+    "scikit-learn>=1.9.1",
+    "safetensors>=0.8.0",
+]
+
+[project.scripts]
+arbiter = "arbiter.cli:main"
+
+[dependency-groups]
+dev = [
+    "ir-measures>=0.4.3",
+    "pytest",
+    "ruff",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/arbiter"]
+
+[tool.ruff]
+line-length = 160
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E731", "B905"]
+
+[tool.pytest.ini_options]
+markers = ["gpu: needs a cuda device"]
+testpaths = ["tests"]

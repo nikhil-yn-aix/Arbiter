@@ -1,0 +1,74 @@
+paths:
+  data: data
+  models: models
+  cache: cache
+  runs: runs
+  results: results
+  figures: figures
+  logs: logs
+
+backbone: ModernBERT-large
+
+arms:
+  B: {label: ModernBERT-large, kind: base, dir: ModernBERT-large, card: mlm pretraining}
+  D1: {label: Laya, kind: decision, dir: laya-en, card: undisclosed decision corpus (rlcd)}
+  D2: {label: Beveridge, kind: decision, dir: Beveridge-Large-C, card: operations documents and logs}
+  D3: {label: von, kind: decision, dir: von, card: decision corpus incl. anli; built on the nli checkpoint}
+  D4: {label: solvi, kind: decision, dir: solvi-large, card: squad2 boolq vitaminc}
+  D5: {label: cortex, kind: decision, dir: cortex-1-large, card: swe and cve typed decisions}
+  N: {label: NLI, kind: control, dir: ModernBERT-large-nli, card: glue (incl. qnli) and anli}
+  R: {label: Noise, kind: control, noise_of: D1, noise_seed: 12345, card: gaussian noise matched to laya drift}
+
+references:
+  minilm: {label: MiniLM-L6 (MS MARCO), dir: minilm}
+  bge: {label: bge-reranker-v2-m3, dir: bge-v2-m3}
+
+train:
+  group: 8
+  queries_per_step: 8
+  micro_queries: 4
+  max_len: 256
+  warmup: 0.1
+  weight_decay: 0.01
+  clip: 1.0
+  sample_seed: 1234
+  pooling: mean
+  ckpt_every_steps: 250
+  ckpt_every_minutes: 10
+
+eval:
+  max_len: 384
+  max_tokens: 49152
+  dev_queries: 500
+  test_queries: 1000
+  heldout_negatives: 20
+  dl_depth: 100
+  beir_depth: 30
+  beir_cap: 200
+  beir: [scifact, nfcorpus, fiqa, trec-covid]
+  query_seed: 7
+
+grid:
+  budget: 1000
+  seed: 0
+  lrs: [2.0e-5, 4.0e-5, 8.0e-5]
+
+main:
+  - {budget: 1000, arms: all, seeds: [1, 2]}
+  - {budget: 16000, arms: [B], seeds: [0, 1], beir_seeds: [0, 1], keep_seeds: [0]}
+  - {budget: 16000, arms: [D1, D2, D3, D4, D5], seeds: [0], beir_seeds: [0], keep_seeds: [0]}
+  - {budget: 4000, arms: [B, D1, D2, D3, D4, D5], seeds: [0, 1], beir_seeds: [0]}
+  - {budget: 250, arms: all, seeds: [0, 1]}
+
+extra:
+  cls_check: {budget: 1000, arms: [B, D1, D4], seed: 0}
+  probe_layers: [0, 4, 8, 12, 16, 20, 24, 28]
+  probe_queries: 1000
+
+analysis:
+  primary_budgets: [1000, 16000]
+  primary_sets: [heldout, dl]
+  equivalence_margin: {heldout: 0.015, dl: 0.02}
+  bad_run_drop: 0.05
+  bootstrap: 10000
+  alpha: 0.05
